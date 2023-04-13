@@ -1,0 +1,20 @@
+# li
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path li_manifest.txt \
+  --output-path li-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data li-paired-end-demux.qza \
+  --o-visualization li-paired-end-demux.qzv
+
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs li-paired-end-demux.qza \
+  --p-trunc-len-f 150 \
+  --p-trunc-len-r 150 \
+  --p-trim-left-f 0 \
+  --p-trim-left-r 0 \
+  --p-n-threads 8 \
+  --o-representative-sequences li-paired-end-rep-seqs.qza \
+  --o-table li-paired-end-table.qza
