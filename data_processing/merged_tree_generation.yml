@@ -1,0 +1,35 @@
+#Note: This code failed on the Northwestern University server due to lack of memory
+
+# trees
+
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+#!/bin/bash
+#SBATCH -J treesdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 20
+#SBATCH --mem=0
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences UG2023_merged_repseqs3.qza \
+--o-alignment merged-aligned-rep-seqs.qza \
+--p-n-threads 20 \
+--o-masked-alignment merged-masked-aligned-rep-seqs.qza \
+--o-tree merged-unrooted-tree.qza \
+--o-rooted-tree merged-rooted-tree.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x treedada2.sh
+sbatch treedada2.sh
