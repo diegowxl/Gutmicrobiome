@@ -1,0 +1,477 @@
+#lavy
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path lavymanifest.txt \
+  --output-path lavy-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+vim lavydada2.sh
+
+#!/bin/bash
+#SBATCH -J lavydada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8 
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs lavy-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadalavy.qza \
+--o-table tablelavy.qza \
+--o-denoising-stats stats-dadalavy.qza
+
+echo "Finishing dada2 job"
+
+vim lavydada2.sh
+
+chmod u+x lavydada2.sh
+sbatch lavydada2.sh
+
+# rerun linzhang II on quest
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path linzhangIImanifest.txt \
+  --output-path linzhangII-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+vim linzhangIIdada2.sh
+
+#!/bin/bash
+#SBATCH -J linzhangIIdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=48G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8 
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs linzhangII-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadalinzhangII.qza \
+--o-table tablelinzhangII.qza \
+--o-denoising-stats stats-dadalinzhangII.qza
+
+echo "Finishing dada2 job"
+
+
+chmod u+x linzhangIIdada2.sh
+sbatch linzhangIIdada2.sh
+
+#ojha
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[SequencesWithQuality]' \
+  --input-path ojhamanifest.txt \
+  --output-path ojha-single-end-demux.qza \
+  --input-format SingleEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data ojha-single-end-demux.qza \
+  --o-visualization ojha-single-end-demux.qzv
+
+
+vim ojhadada2.sh
+
+#!/bin/bash
+#SBATCH -J ojhadada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=48G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8 
+
+qiime dada2 denoise-single \
+  --i-demultiplexed-seqs ojha-single-end-demux.qza \
+  --p-trunc-len 150 \
+  --p-trim-left 0 \
+  --p-n-threads 0 \
+  --o-representative-sequences ojha-single-end-rep-seqs.qza \
+  --o-table ojha-single-end-table.qza \
+  --o-denoising-stats ojha-single-end-stats-dada.qza
+
+echo "Finishing dada2 job"
+
+
+chmod u+x ojhadada2.sh
+sbatch ojhadada2.sh
+
+
+vim ojhadada2.sh
+
+
+# lawrence
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path lawrencemanifest.txt \
+  --output-path lawrence-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data lawrence-paired-end-demux.qza \
+  --o-visualization lawrence-paired-end-demux.qzv
+
+vim lawrencedada2.sh
+
+#!/bin/bash
+#SBATCH -J lawrencedada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-single \
+  --i-demultiplexed-seqs lawrence-paired-end-demux.qza \
+  --p-trunc-len 150 \
+  --p-trim-left 0 \
+  --p-n-threads 0 \
+  --o-representative-sequences lawrence-single-end-rep-seqs.qza \
+  --o-table lawrence-single-end-table.qza \
+  --o-denoising-stats lawrence-single-end-stats-dada.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x lawrencedada2.sh
+sbatch lawrencedada2.sh
+
+#klammsteiner
+
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path klammsteinermanifest.txt \
+  --output-path klammsteiner-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data klammsteiner-paired-end-demux.qza \
+  --o-visualization klammsteiner-paired-end-demux.qzv
+
+vim klammsteinerdada2.sh
+
+#!/bin/bash
+#SBATCH -J klammsteinerdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs klammsteiner-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadaklammsteiner.qza \
+--o-table tableklammsteiner.qza \
+--o-denoising-stats stats-dadaklammsteiner.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x klammsteinerdada2.sh
+sbatch klammsteinerdada2.sh
+
+#hu_b
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[SequencesWithQuality]' \
+  --input-path hu_bmanifest.txt \
+  --output-path hu_b-single-end-demux.qza \
+  --input-format SingleEndFastqManifestPhred33V2
+
+vim hu_bdada2.sh
+
+#!/bin/bash
+#SBATCH -J hu_bdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=48G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8 
+
+qiime dada2 denoise-single \
+  --i-demultiplexed-seqs hu_b-single-end-demux.qza \
+  --p-trunc-len 150 \
+  --p-trim-left 0 \
+  --p-n-threads 0 \
+  --o-representative-sequences hu_b-single-end-rep-seqs.qza \
+  --o-table hu_b-single-end-table.qza \
+  --o-denoising-stats hu_b-single-end-stats-dada.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x hu_bdada2.sh
+sbatch hu_bdada2.sh
+
+#kaczmarczyk
+
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path kaczmarczykmanifest.txt \
+  --output-path kaczmarczyk-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data kaczmarczyk-paired-end-demux.qza \
+  --o-visualization kaczmarczyk-paired-end-demux.qzv
+
+vim kaczmarczykdada2.sh
+
+#!/bin/bash
+#SBATCH -J kaczmarczykdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs kaczmarczyk-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadakaczmarczyk.qza \
+--o-table tablekaczmarczyk.qza \
+--o-denoising-stats stats-dadakaczmarczyk.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x kaczmarczykdada2.sh
+sbatch kaczmarczykdada2.sh
+
+#zhu_leafminers_a
+
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path zhu_leafminers_amanifest.txt \
+  --output-path zhu_leafminers_a-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data zhu_leafminers_a-paired-end-demux.qza \
+  --o-visualization zhu_leafminers_a-paired-end-demux.qzv
+
+vim zhu_leafminers_adada2.sh
+
+#!/bin/bash
+#SBATCH -J kaczmarczykdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs zhu_leafminers_a-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadazhu_leafminers_a.qza \
+--o-table tablezhu_leafminers_a.qza \
+--o-denoising-stats stats-dadazhu_leafminers_a.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x zhu_leafminers_adada2.sh
+sbatch zhu_leafminers_adada2.sh
+
+
+#zhu_leafminers_b
+
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path zhu_leafminers_bmanifest.txt \
+  --output-path zhu_leafminers_b-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data zhu_leafminers_b-paired-end-demux.qza \
+  --o-visualization zhu_leafminers_b-paired-end-demux.qzv
+
+vim zhu_leafminers_bdada2.sh
+
+#!/bin/bash
+#SBATCH -J zhu_leafminers_bdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs zhu_leafminers_b-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadazhu_leafminers_b.qza \
+--o-table tablezhu_leafminers_b.qza \
+--o-denoising-stats stats-dadazhu_leafminers_b.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x zhu_leafminers_bdada2.sh
+sbatch zhu_leafminers_bdada2.sh
+
+qiime feature-table group \
+ --i-table tang-paired-end-table.qza \
+ --p-axis sample \
+ --m-metadata-file Tang_new_manifest.txt \
+ --m-metadata-column sampleid2 \
+ --p-mode sum \
+ --o-grouped-table tang-rename-paired-end-table.qza
+
+#cini
+
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path cinimanifest.txt \
+  --output-path cini-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data cini-paired-end-demux.qza \
+  --o-visualization cini-paired-end-demux.qzv
+
+vim cinidada2.sh
+
+#!/bin/bash
+#SBATCH -J cinidada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=24G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs cini-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 0 \
+--o-representative-sequences rep-seqs-dadacini.qza \
+--o-table tablecini.qza \
+--o-denoising-stats stats-dadacini.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x cinidada2.sh
+sbatch cinidada2.sh
