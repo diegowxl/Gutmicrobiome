@@ -1,5 +1,5 @@
-# GMTOL - Gut Microbiome Tree Of Life
--- A project of building the largest gut microbiome data set on earth.
+GMTOL - Gut Microbiome Tree Of Life
+-- Brief intro of this project of building the largest gut microbiome data set on earth.
 
 Hi, I am Xiaolin (Diego) Wang, Northwestern undergraduate class of 2025, majoring in statistics, economics and religious studies. 
 
