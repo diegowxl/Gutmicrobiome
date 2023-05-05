@@ -1,0 +1,93 @@
+#Australia
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path australiamanifest.txt \
+  --output-path australia-paired-end-demux.qza \
+  --input-format PairedEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data australia-paired-end-demux.qza \
+  --o-visualization australia-paired-end-demux.qzv
+
+vim australiadada2.sh
+
+#!/bin/bash
+#SBATCH -J australiadada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --mem=16G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs australia-paired-end-demux.qza \
+--p-trunc-len-f 150 \
+--p-trunc-len-r 150 \
+--p-trim-left-f 0 \
+--p-trim-left-r 0 \
+--p-n-threads 1 \
+--o-representative-sequences rep-seqs-dadaaustralia.qza \
+--o-table tableaustralia.qza \
+--o-denoising-stats stats-dadaaustralia.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x australiadada2.sh
+sbatch australiadada2.sh
+
+#russia
+srun --account=p31966 --time=2:00:00 --partition=short --mem=4G --pty bash -l
+
+module load qiime2/2022.8
+
+qiime tools import \
+  --type 'SampleData[SequencesWithQuality]' \
+  --input-path russiamanifest.txt \
+  --output-path russia-single-end-demux.qza \
+  --input-format SingleEndFastqManifestPhred33V2
+
+qiime demux summarize \
+  --i-data russia-single-end-demux.qza \
+  --o-visualization russia-single-end-demux.qzv
+
+vim russiadada2.sh
+
+#!/bin/bash
+#SBATCH -J russiadada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 6
+#SBATCH --mem=48G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8 
+
+qiime dada2 denoise-single \
+  --i-demultiplexed-seqs russia-single-end-demux.qza \
+  --p-trunc-len 150 \
+  --p-trim-left 0 \
+  --p-n-threads 0 \
+  --o-representative-sequences russia-single-end-rep-seqs.qza \
+  --o-table russia-single-end-table.qza \
+  --o-denoising-stats russia-single-end-stats-dada.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x russiadada2.sh
+sbatch russiadada2.sh
