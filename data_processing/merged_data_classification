@@ -24,3 +24,29 @@ echo "Finishing dada2 job"
 
 chmod u+x classifierdada2.sh
 sbatch classifierdada2.sh
+
+# classifier visualization
+
+#!/bin/bash
+#SBATCH -J classifyvisdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=0
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime metadata tabulate \
+  --m-input-file merged_taxonomy.qza \
+  --o-visualization merged_taxonomy.qzv
+
+echo "Finishing dada2 job"
+
+chmod u+x classifyvisdada2.sh
+sbatch classifyvisdada2.sh
