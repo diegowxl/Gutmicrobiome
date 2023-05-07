@@ -1,0 +1,25 @@
+# treeanalysis
+
+#!/bin/bash
+#SBATCH -J treeanalysisdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=0
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log 
+
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny GMTOL_rooted_tree.qza \
+  --i-table UG2023_merged_tables3_final.qza \
+  --p-sampling-depth 400 \
+  --m-metadata-file GMTOLmetadata_UG2023_7.tsv \
+  --output-dir tree_analysis_results
+
+echo "Finishing dada2 job"
+
+chmod u+x treeanalysisdada2.sh
+sbatch treeanalysisdada2.sh
