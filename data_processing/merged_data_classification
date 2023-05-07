@@ -1,0 +1,26 @@
+# classifier
+
+#!/bin/bash
+#SBATCH -J classifierdada2
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=0
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log  
+
+module purge all
+module load qiime2/2022.8
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier 2022.10.backbone.v4.nb.qza \
+  --i-reads UG2023_merged_repseqs3.qza \
+  --o-classification merged_taxonomy.qza
+
+echo "Finishing dada2 job"
+
+chmod u+x classifierdada2.sh
+sbatch classifierdada2.sh
