@@ -1,0 +1,28 @@
+# alpha-rarefaction
+
+#!/bin/bash
+#SBATCH -J alphararefaction-2k
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity alpha-rarefaction \
+  --i-table GMTOL_table_gonzremoved_diego.qza \
+  --i-phylogeny GMTOL_rooted_tree.qza \
+  --p-max-depth 2000 \
+  --m-metadata-file GMTOLmetadata_UG2023_7_diego_utf-8.txt \
+  --o-visualization alpha-rarefaction-2k.qzv
+
+echo "Finishing dada2 job"
+
+chmod u+x alpharefraction.sh
+sbatch alpharefraction.sh
