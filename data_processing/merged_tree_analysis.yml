@@ -1,25 +1,29 @@
-# treeanalysis
+vim treeanalysisMay30.sh
+# tree analysis May 30
 
 #!/bin/bash
-#SBATCH -J treeanalysisdada2
+#SBATCH -J treeanalysisMay30
 #SBATCH --mail-type=ALL
 #SBATCH -A p31966
 #SBATCH --mail-user=diegowang2025@u.northwestern.edu
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --mem=0
+#SBATCH --mem=128G
 #SBATCH -t 48:00:00
 #SBATCH -p normal
-#SBATCH --output=output.log 
+#SBATCH --output=output2.log 
+
+module purge all
+module load qiime2/2022.8
 
 qiime diversity core-metrics-phylogenetic \
-  --i-phylogeny GMTOL_rooted_tree.qza \
-  --i-table UG2023_merged_tables3_final.qza \
-  --p-sampling-depth 400 \
-  --m-metadata-file GMTOLmetadata_UG2023_7.tsv \
-  --output-dir tree_analysis_results
+  --i-phylogeny GMTOL_rooted_treeMay28.qza \
+  --i-table deblurFinal_merged_table10.qza \
+  --p-sampling-depth 1000 \
+  --m-metadata-file  newmetadata_GMTOL_test.txt \
+  --output-dir tree_analysis_results_May30
 
 echo "Finishing dada2 job"
 
-chmod u+x treeanalysisdada2.sh
-sbatch treeanalysisdada2.sh
+chmod u+x treeanalysisMay30.sh
+sbatch treeanalysisMay30.sh
