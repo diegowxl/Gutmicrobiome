@@ -18,15 +18,15 @@ module load qiime2/2022.8
 qiime diversity beta-group-significance \
   --i-distance-matrix tree_analysis_results_V3V4_Jun20/unweighted_unifrac_distance_matrix.qza \
   --m-metadata-file metadata/20230619metadata.txt \
-  --m-metadata-column diet \
-  --o-visualization result_visualization/20230621-unweighted-unifrac-body-site-significance-V3V4-diet.qzv \
+  --m-metadata-column Diet \
+  --o-visualization result_visualization/20230621Unweighted-unifrac-body-site-significance-V3V4-diet.qzv \
   --p-pairwise
 
 qiime diversity beta-group-significance \
   --i-distance-matrix tree_analysis_results_V4_Jun20/unweighted_unifrac_distance_matrix.qza \
   --m-metadata-file metadata/20230619metadata.txt \
-  --m-metadata-column diet \
-  --o-visualization result_visualization/20230621-unweighted-unifrac-body-site-significance-V4-diet.qzv \
+  --m-metadata-column Diet \
+  --o-visualization result_visualization/20230621Unweighted-unifrac-body-site-significance-V4-diet.qzv \
   --p-pairwise
 
 echo "Finishing dada2 job"
