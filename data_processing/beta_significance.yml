@@ -1,0 +1,65 @@
+#Diet
+
+#!/bin/bash
+#SBATCH -J betasigV3V4Jun21
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputV3V4.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix tree_analysis_results_V3V4_Jun20/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --m-metadata-column Diet \
+  --o-visualization result_visualization/20230621Unweighted-unifrac-body-site-significance-V3V4-diet.qzv \
+  --p-pairwise
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix tree_analysis_results_V4_Jun20/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --m-metadata-column Diet \
+  --o-visualization result_visualization/20230621Unweighted-unifrac-body-site-significance-V4-diet.qzv \
+  --p-pairwise
+
+echo "Finishing dada2 job"
+
+# Class
+
+#!/bin/bash
+#SBATCH -J betasigclassV3V4Jun21
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputV3V4.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix tree_analysis_results_V4_Jun20/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --m-metadata-column Class \
+  --o-visualization result_visualization/20230621Unweighted-unifrac-body-site-significance-V4-Class.qzv \
+  --p-pairwise
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix tree_analysis_results_V3V4_Jun20/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --m-metadata-column Class \
+  --o-visualization result_visualization/20230621Unweighted-unifrac-body-site-significance-V3V4-Class.qzv \
+  --p-pairwise
+
+echo "Finishing dada2 job"
