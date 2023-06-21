@@ -27,3 +27,36 @@ echo "Finishing dada2 job"
 
 chmod u+x treeanalysisJun19.sh
 sbatch treeanalysisJun19.sh
+
+#V3V4/V4 seperation studies
+
+#!/bin/bash
+#SBATCH -J treeanalysisV3V4Jun20
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output34.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny tree/20230602rootedtree.qza \
+  --i-table tables/20230620filtered-table-V3V4.qza \
+  --p-sampling-depth 1000 \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --output-dir tree_analysis_results_V3V4_Jun20
+
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny tree/20230602rootedtree.qza \
+  --i-table tables/20230620filtered-table-V4.qza \
+  --p-sampling-depth 1000 \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --output-dir tree_analysis_results_V4_Jun20
+
+echo "Finishing dada2 job"
