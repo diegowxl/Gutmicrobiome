@@ -1,0 +1,28 @@
+#faith pd sig
+
+#!/bin/bash
+#SBATCH -J faithsigV3V4Jun21
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=output.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity tree_analysis_results_V3V4_Jun20/faith_pd_vector.qza \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --o-visualization result_visualization/20230621faith-pd-group-significance-V3V4.qzv
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity tree_analysis_results_V4_Jun20/faith_pd_vector.qza \
+  --m-metadata-file metadata/20230619metadata.txt \
+  --o-visualization result_visualization/20230621faith-pd-group-significance-V4.qzv
+
+echo "Finishing dada2 job"
