@@ -1,0 +1,104 @@
+---
+title: "dwangPCOAJuly12"
+author: "diegowang"
+date: "2023-07-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("C:/Users/diego/Desktop/R Stuff")
+```
+
+```{r}
+require(ggplot2)
+require(vegan)
+require(RColorBrewer)
+require(tidyverse)
+require(qiime2R)
+require(cowplot)
+```
+
+```{r}
+md.fp <- '20230621metadata.txt'
+md <- read_tsv(md.fp)
+md$SampleID=md$sampleid
+```
+
+```{r}
+uni_unw.pc.fp <- 'unweighted_unifrac_pcoa_results_v4.qza'
+uni_unw.pc <- read_qza(uni_unw.pc.fp)
+uni_unw.pc$data$Vectors
+```
+
+```{r}
+outdir = 'v4_pcoa_figs'
+#dir.create(file.path(outdir), showWarnings = FALSE)
+```
+
+```{r}
+
+pc_all <- uni_unw.pc$data$Vectors %>% #rename to match the metadata table
+  left_join(md, by='SampleID') %>%
+  ggplot(aes(x=PC1, y=PC2, color=Class)) +
+  stat_ellipse(alpha=0.7) +
+  geom_point(alpha=0.3,size=1.1,aes(shape=DietSimp)
+             ) +
+  xlab(paste("PC1: ", round(100*uni_unw.pc$data$ProportionExplained[1]), "%")) +
+  ylab(paste("PC2: ", round(100*uni_unw.pc$data$ProportionExplained[2]), "%")) +
+  theme_bw() + 
+  theme(panel.grid = element_blank()) +
+  scale_color_manual(values=class_colors) +
+  scale_shape_manual(values=c(20, 17,15,3,6)) +
+  ggtitle("Unweighted UniFrac")
+
+
+ggsave(pc_all, filename=file.path(outdir, '20230713pcoa.unifrac.color-class.pdf'), width=16, height=12)
+
+pc_all
+```
+
+```{r}
+mycol <- rgb(0, 0, 255, max = 255, alpha = 125, names = "blue50")
+
+t_col <- function(color, percent = 100, name = NULL) {
+  #      color = color name
+  #    percent = % transparency
+  #       name = an optional name for the color
+
+## Get RGB values for named color
+rgb.val <- col2rgb(color)
+
+## Make new color using input color as base and alpha set by transparency
+t.col <- rgb(rgb.val[1], rgb.val[2], rgb.val[3],
+             max = 255,
+             alpha = (100 - percent) * 255 / 100,
+             names = name)
+
+## Save the color
+invisible(t.col)
+}
+mycol <- t_col("pink", perc = 100, name = "lt.pink")
+```
+
+```{r}
+class_colors <- c("Actinopterygii" = "#000066",
+"Amphibia" = "#4682B4",
+"Aves" = "#FB8500",
+"Bivalvia" = "#FF0000",
+"Cephalopoda" = "#028A0F",
+"Chondrichthyes" = "#028A0F",
+"Clitellata" = "#DDFD32",
+"Echinoidea" = "#CC00FF",
+"Gastropoda" = "#CC00FF",
+"Hyperoartia" = "#4B3619",
+"Insecta" = "#FCBACB",
+"Malacostraca" = "#999999",
+"Mammalia" = "#FEE135",
+"Merostomata" =  "#7DCFB6",
+"Reptilia" = "#33FFFF")
+```
+
