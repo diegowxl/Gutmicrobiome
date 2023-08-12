@@ -1,0 +1,57 @@
+---
+title: "alphadivboxplot"
+author: "diegowang"
+date: "2023-08-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("C:/Users/diego/Desktop/R Stuff")
+```
+
+```{r}
+a=read.table("alphadiversity.tsv",header = TRUE, sep = '\t')
+a
+```
+
+```{r}
+#install.packages("tidyr")  # If not installed
+library(ggplot2)
+library(tidyr)
+```
+
+```{r}
+ggplot(a, aes(x = Order, y = faith_pd, fill = "faith_pd")) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.5, position = position_jitter(0.2)) +
+  geom_boxplot(aes(y = shannon_entropy, fill = "shannon_entropy"), width = 0.5, position = position_dodge(0.75)) +
+  labs(x = "DietSimp", y = "Alpha Diversity") +
+  scale_fill_manual(name = "Diversity Metrics", values = c("faith_pd" = "blue", "shannon_entropy" = "red")) +
+  theme_minimal()
+```
+
+```{r}
+# Assuming df is your dataframe
+df_long <- gather(a, key = "Metric", value = "Diversity", faith_pd, shannon_entropy)
+```
+
+```{r}
+a1=ggplot(df_long, aes(x = Order, y = Diversity,fill='gray')) +
+  geom_boxplot(width = 0.5, position = position_dodge(0.75)) +
+  labs(x = "Order", y = "Diversity") +
+  scale_fill_manual(name = "Diversity Metrics", values = c("faith_pd" = "gray", "shannon_entropy" = "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  facet_wrap(~ Metric, scales = "free_y", ncol = 1)
+ggsave('alphadiversityOrder.pdf',plot=a1,width=8,height=6,units=c("in"))
+```
+
+```{r}
+a$Class=factor(a$Class, levels=c('Mammalia','Reptilia','Aves','Amphibia','Actinopterygii','Chondrichthyes','Hyperoartia','Echinoidea','Cephalopoda','Bivalvia','Gastropoda','Clitellata','Insecta','Malacostraca','Merostomata'))
+levels(a$Class)
+```
+
