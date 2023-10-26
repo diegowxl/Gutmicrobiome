@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH -J treegenerationOct26
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputOct26.log
+
+qiime phylogeny align-to-tree-mafft-fasttree \
+  --i-sequences rep-seqs.qza \
+  --output-dir phylogeny-align-to-tree-mafft-fasttree
+
+echo "Finishing dada2 job"
+
+chmod u+x treegenerationOct26.sh
+sbatch treegenerationOct26.sh
