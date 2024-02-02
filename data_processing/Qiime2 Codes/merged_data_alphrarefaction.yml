@@ -1,3 +1,27 @@
+#!/bin/bash
+#SBATCH -J alphararefaction
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputFeb02.log
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity alpha-rarefaction \
+  --i-table GMTOLhumanNov2023_merged_tables.qza \
+  --i-phylogeny GMTOLhumanNov2023_Sam_rooted_tree.qza \
+  --p-max-depth 1000 \
+  --m-metadata-file metadata_2024Feb02.tsv \
+  --o-visualization GMTOLhumanFeb2024_DW_alpha-rarefaction.qzv
+
+
+
 # alpha-rarefaction
 qiime diversity alpha-rarefaction \
   --i-table tables/20230620filtered-table-V4.qza \
