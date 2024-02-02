@@ -1,3 +1,23 @@
+#!/bin/bash
+#SBATCH -J faithsigFeb02
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=128G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputfaithpd.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity tree_analysis_results_Feb02/faith_pd_vector.qza \
+  --m-metadata-file metadata_2024Feb02.tsv \
+  --o-visualization GMTOLhumanFeb2024-DW-faith-pd-group-significance.qzv
+
 #faith pd sig
 
 #!/bin/bash
