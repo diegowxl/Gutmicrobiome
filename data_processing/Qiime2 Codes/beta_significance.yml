@@ -1,6 +1,102 @@
 #Continent
 
 #!/bin/bash
+#SBATCH -J betasigV3V4classContinentFeb02
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputContinentFeb08V3V4.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix qiime2/V3V4human_tableCoreMetrics2/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata_2024Feb02.tsv \
+  --m-metadata-column Continent \
+  --o-visualization GMTOLhumanFeb2024-DW-weighted-unifrac-body-site-significance-Continent-V3V4.qzv \
+  --p-pairwise
+
+#!/bin/bash
+#SBATCH -J betasigclassAge2Feb08V3V4
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputAgeFeb08V3V4.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix qiime2/V3V4human_tableCoreMetrics2/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata_2024Feb02.tsv \
+  --m-metadata-column Age2 \
+  --o-visualization GMTOLhumanFeb2024-weighted-unifrac-body-site-significance-Age2-V3V4.qzv \
+  --p-pairwise
+
+betasignificanceV4Age2Feb08.sh
+
+
+#!/bin/bash
+#SBATCH -J betasigV4classContinentFeb02
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputContinentFeb08V4.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix qiime2/V4human_tableCoreMetrics2/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata_2024Feb02.tsv \
+  --m-metadata-column Continent \
+  --o-visualization GMTOLhumanFeb2024-DW-weighted-unifrac-body-site-significance-Continent-V4.qzv \
+  --p-pairwise
+
+
+#!/bin/bash
+#SBATCH -J betasigclassAge2Feb08V4
+#SBATCH --mail-type=ALL
+#SBATCH -A p31966
+#SBATCH --mail-user=diegowang2025@u.northwestern.edu
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -t 48:00:00
+#SBATCH -p normal
+#SBATCH --output=outputAgeFeb08V4.log 
+
+module purge all
+module load qiime2/2022.8
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix qiime2/V4human_tableCoreMetrics2/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata_2024Feb02.tsv \
+  --m-metadata-column Age2 \
+  --o-visualization GMTOLhumanFeb2024-weighted-unifrac-body-site-significance-Age2-V4.qzv \
+  --p-pairwise
+
+
+
+#Continent
+
+#!/bin/bash
 #SBATCH -J betasigclassContinentFeb02
 #SBATCH --mail-type=ALL
 #SBATCH -A p31966
